@@ -1,0 +1,9 @@
+{
+  "singleQuote": true,
+  "semi": false,
+  "eslintIntegration": true,
+  "bracketSpacing": true,
+  "arrowParens": "avoid",
+  "spaceBeforeFunctionParent": true,
+  "trailingComma": "es5"
+}
