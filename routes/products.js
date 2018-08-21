@@ -7,4 +7,14 @@ router.get('/', (req, res, next) => {
   })
 })
 
+router.post('/', (req, res) => {
+  const product = {
+    name: req.body.name,
+  }
+  res.status(201).json({
+    message: 'ok',
+    product,
+  })
+})
+
 module.exports = router
