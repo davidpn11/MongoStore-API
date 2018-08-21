@@ -1,20 +1,39 @@
 const express = require('express')
 const router = express.Router()
+const mongoose = require('mongoose')
+const Product = require('../model/product')
 
 router.get('/', (req, res, next) => {
-  res.status(200).json({
-    message: 'Orders were fetched',
-  })
+  Product.find()
+    .exec()
+    .then(docs => res.status(200).json(docs))
+    .catch(err => res.status(500).json({ err }))
+  // res.status(200).json({
+  //   message: 'Orders were fetched',
+  // })
+})
+
+router.get('/:productId', (req, res, next) => {
+  const id = req.params.productId
+  Product.findById(id)
+    .exec()
+    .then(doc => res.status(200).json(doc))
+    .catch(err => res.status(500).json({ err }))
 })
 
 router.post('/', (req, res) => {
-  const product = {
-    name: req.body.name,
-  }
-  res.status(201).json({
-    message: 'ok',
-    product,
+  const product = new Product({
+    _id: new mongoose.Types.ObjectId(),
+    value: req.body.value,
   })
+  product
+    .save()
+    .exec()
+    .then(result => {
+      console.log(result)
+      res.status(201).json(result)
+    })
+    .catch(err => res.status(500).json(result))
 })
 
 module.exports = router

@@ -3,10 +3,19 @@ const app = express()
 const morgan = require('morgan')
 const productsRoutes = require('./routes/products')
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
 
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
+
+app.use('/products', productsRoutes)
+mongoose.connect(
+  `mongodb+srv://davidpn11:${
+    process.env.MONGO_ATLAS_PASS
+  }@cluster0-vvkaz.mongodb.net/test?retryWrites=true`,
+  { useNewUrlParser: true }
+)
 
 //middleware to handle CORS
 app.use((req, res, next) => {
@@ -21,8 +30,6 @@ app.use((req, res, next) => {
   }
   next()
 })
-
-app.use('/products', productsRoutes)
 
 /* Middleware to handle errors.
 If the requests reaches here, it means that it couldnt be handled by
