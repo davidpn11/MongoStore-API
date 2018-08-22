@@ -9,6 +9,7 @@ app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+console.log()
 app.use('/products', productsRoutes)
 mongoose.connect(
   `mongodb+srv://davidpn11:${

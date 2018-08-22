@@ -25,7 +25,7 @@ router.put('/:productId', (req, res, next) => {
   const _id = req.params.productId
   const { value = '' } = req.body
 
-  Product.update({ id }, { $set: { value } })
+  Product.update({ _id }, { $set: { value } })
     .exec()
     .then(doc => res.status(200).json(doc))
     .catch(err => res.status(500).json({ err }))
@@ -46,7 +46,6 @@ router.post('/', (req, res) => {
   })
   product
     .save()
-    .exec()
     .then(result => {
       console.log(result)
       res.status(201).json(result)
