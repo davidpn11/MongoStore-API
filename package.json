@@ -8,7 +8,8 @@
   },
   "scripts": {
     "test": "test",
-    "start": "nodemon ./server.js localhost 3000"
+    "start": "node server.js",
+    "nodemon": "nodemon ./server.js localhost 3000"
   },
   "keywords": [
     "node",
