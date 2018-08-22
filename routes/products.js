@@ -46,11 +46,8 @@ router.post('/', (req, res) => {
   })
   product
     .save()
-    .then(result => {
-      console.log(result)
-      res.status(201).json(result)
-    })
-    .catch(err => res.status(500).json(result))
+    .then(result => res.status(201).json(result))
+    .catch(err => res.status(500).json(err))
 })
 
 module.exports = router
