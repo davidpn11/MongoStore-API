@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "Mongo store API",
   "main": "server.js",
+  "engines": {
+    "node": "8.11.2"
+  },
   "scripts": {
     "test": "test",
     "start": "nodemon ./server.js localhost 3000"
