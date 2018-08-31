@@ -10,10 +10,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 app.use('/products', productsRoutes)
+
+app.get('/', (req, res) => res.sendFile('./index.html', { root: __dirname }))
+
 mongoose.connect(
-  `mongodb+srv://davidpn11:${
-    process.env.MONGO_ATLAS_PASS
-  }@cluster0-vvkaz.mongodb.net/test?retryWrites=true`,
+  `mongodb+srv://davidpn11:ECuQDHbgSpP41596-@cluster0-vvkaz.mongodb.net/test?retryWrites=true`,
   { useNewUrlParser: true }
 )
 
