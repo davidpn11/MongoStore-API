@@ -1,3 +1,3 @@
-#MongoStore API
+# MongoStore API
 
-hosted with NOW [here](https://mongostore-api.now.sh/)
+##Hosted with NOW [here](https://mongostore-api.now.sh/)
