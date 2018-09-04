@@ -2,14 +2,11 @@
   "name": "mongostore-api",
   "version": "1.0.0",
   "description": "Mongo store API",
-  "main": "server.js",
-  "engines": {
-    "node": "8.11.2"
-  },
+  "main": "./src/index.js",
   "scripts": {
     "test": "test",
-    "start": "node server.js",
-    "start-nodemon": "nodemon ./server.js localhost 3000"
+    "start": "node src/index.js",
+    "nodemon": "nodemon ./src/index.js localhost 3000"
   },
   "keywords": [
     "node",
