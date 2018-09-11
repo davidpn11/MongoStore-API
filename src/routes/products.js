@@ -42,7 +42,12 @@ router.delete('/:productId', (req, res, next) => {
 router.post('/', (req, res) => {
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
-    value: req.body.value,
+    title: req.body.title,
+    slogan: req.body.slogan,
+    stars: req.body.stars,
+    category: req.body.category,
+    price: req.body.price,
+    description: req.body.description,
   })
   product
     .save()
