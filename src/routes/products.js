@@ -3,7 +3,6 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const Product = require('../model/product')
 const multer = require('multer')
-const { dd } = require('dumper.js')
 const fs = require('fs')
 
 const storage = multer.diskStorage({
