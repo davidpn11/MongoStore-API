@@ -66,8 +66,11 @@ router.post('/clear', (req, res) => {
         if (doc.productImage) {
           console.log('image', doc.productImage)
           fs.unlink(doc.productImage, err => {
-            if (err) throw err
-            console.log('deleted', doc.productImage)
+            if (err) {
+              console.log('dont exist')
+            } else {
+              console.log('deleted', doc.productImage)
+            }
           })
         } else {
           console.log('no image')
