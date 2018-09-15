@@ -14,12 +14,16 @@ app.use('/products', productsRoutes)
 
 app.get('/', (req, res) => res.sendFile('./index.html', { root: __dirname }))
 
-mongoose.connect(
-  `mongodb+srv://davidpn11:${
-    process.env.MONGO_ATLAS_PASS
-  }@cluster0-vvkaz.mongodb.net/test?retryWrites=true`,
-  { useNewUrlParser: true }
-)
+try {
+  mongoose.connect(
+    `mongodb+srv://davidpn11:${
+      process.env.MONGO_ATLAS_PASS
+    }@cluster0-vvkaz.mongodb.net/test?retryWrites=true`,
+    { useNewUrlParser: true }
+  )
+} catch (error) {
+  console.error(error)
+}
 
 //middleware to handle CORS
 app.use(
