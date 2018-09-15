@@ -8,7 +8,7 @@ const mongoose = require('mongoose')
 app.use(morgan('dev'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
+app.use('/uploads', express.static('uploads'))
 app.use('/products', productsRoutes)
 
 app.get('/', (req, res) => res.sendFile('./index.html', { root: __dirname }))

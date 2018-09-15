@@ -3,8 +3,28 @@ const router = express.Router()
 const mongoose = require('mongoose')
 const Product = require('../model/product')
 const multer = require('multer')
-const upload = multer({ dest: 'uploads/' })
 const { dd } = require('dumper.js')
+const fs = require('fs')
+
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => callback(null, './uploads/'),
+  filename: (req, file, callback) =>
+    callback(null, new Date().toISOString() + file.originalname),
+})
+const fileFilter = (req, file, callback) => {
+  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
+    callback(null, true)
+  } else {
+    callback(new Error('file is not an image'), false)
+  }
+}
+const upload = multer({
+  storage,
+  fileFilter,
+  limits: {
+    fileSize: 1024 * 1024 * 2,
+  },
+})
 
 router.get('/', (req, res, next) => {
   Product.find()
@@ -43,16 +63,28 @@ router.post('/clear', (req, res) => {
   Product.find()
     .exec()
     .then(docs => {
-      docs.map(doc => Product.deleteMany().exec())
-      // dd(docs)
-
-      return res.status(200).json({ status: 'database cleared' })
+      docs.map(doc => {
+        if (doc.productImage) {
+          console.log('image', doc.productImage)
+          fs.unlink(doc.productImage, err => {
+            if (err) throw err
+            console.log('deleted', doc.productImage)
+          })
+        } else {
+          console.log('no image')
+        }
+      })
+    })
+    .then(() => {
+      console.log('finished')
+      Product.deleteMany()
+        .exec()
+        .then(() => res.status(200).json({ status: 'database cleared' }))
     })
     .catch(err => res.status(500).json({ err }))
 })
 
 router.post('/', upload.single('productImage'), (req, res) => {
-  console.log(req.file)
   const product = new Product({
     _id: new mongoose.Types.ObjectId(),
     title: req.body.title,
@@ -61,6 +93,7 @@ router.post('/', upload.single('productImage'), (req, res) => {
     category: req.body.category,
     price: req.body.price,
     description: req.body.description,
+    productImage: req.file ? req.file.path : '',
   })
   product
     .save()
