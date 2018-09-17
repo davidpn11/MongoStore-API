@@ -98,10 +98,27 @@ router.post('/clear', (req, res) => {
 })
 
 router.post('/', upload.single('productImage'), (req, res) => {
-  cloudinary.v2.uploader.upload(req.file.path, (err, cloudResult) => {
-    if (err) {
-      return res.status(500).json(err)
-    }
+  if (req.file) {
+    cloudinary.v2.uploader.upload(req.file.path, (err, cloudResult) => {
+      if (err) {
+        return res.status(500).json(err)
+      }
+      const product = new Product({
+        _id: new mongoose.Types.ObjectId(),
+        title: req.body.title,
+        slogan: req.body.slogan,
+        stars: req.body.stars,
+        category: req.body.category,
+        price: req.body.price,
+        description: req.body.description,
+        productImage: cloudResult.secure_url || '',
+      })
+      product
+        .save()
+        .then(result => res.status(201).json(cloudResult))
+        .catch(err => res.status(500).json(err))
+    })
+  } else {
     const product = new Product({
       _id: new mongoose.Types.ObjectId(),
       title: req.body.title,
@@ -110,13 +127,13 @@ router.post('/', upload.single('productImage'), (req, res) => {
       category: req.body.category,
       price: req.body.price,
       description: req.body.description,
-      productImage: cloudResult.secure_url || '',
+      productImage: '',
     })
     product
       .save()
       .then(result => res.status(201).json(cloudResult))
       .catch(err => res.status(500).json(err))
-  })
+  }
 })
 
 module.exports = router
