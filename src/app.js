@@ -21,6 +21,7 @@ app.use('/uploads', express.static('uploads'))
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+//cors enabled
 app.use((req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*')
   res.header(
@@ -34,12 +35,11 @@ app.use((req, res, next) => {
   next()
 })
 
+//routes
 app.use('/products', productsRoutes)
 app.get('/', (req, res) => res.sendFile('./index.html', { root: __dirname }))
 
-/* Middleware to handle errors.
-If the requests reaches here, it means that it couldnt be handled by
-any route */
+// Middleware to handle errors.
 app.use((req, res, next) => {
   const error = new Error('Not found')
   error.status = 404
