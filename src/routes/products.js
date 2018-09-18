@@ -5,11 +5,12 @@ const Product = require('../model/product')
 const multer = require('multer')
 const fs = require('fs')
 const cloudinary = require('cloudinary')
-const storage = multer.diskStorage({
-  // destination: (req, file, callback) => callback(null, './uploads/'),
-  filename: (req, file, callback) =>
-    callback(null, new Date().toISOString() + file.originalname),
-})
+// const storage = multer.diskStorage({
+//   // destination: (req, file, callback) => callback(null, './uploads/'),
+//   filename: (req, file, callback) =>
+//     callback(null, new Date().toISOString() + file.originalname),
+// })
+const storage = multer.memoryStorage()
 const fileFilter = (req, file, callback) => {
   if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
     callback(null, true)
