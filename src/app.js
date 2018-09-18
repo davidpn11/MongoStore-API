@@ -4,15 +4,6 @@ const morgan = require('morgan')
 const productsRoutes = require('./routes/products')
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
-const cors = require('cors')
-
-app.use(morgan('dev'))
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-app.use('/uploads', express.static('uploads'))
-app.use('/products', productsRoutes)
-
-app.get('/', (req, res) => res.sendFile('./index.html', { root: __dirname }))
 
 try {
   mongoose.connect(
@@ -25,25 +16,26 @@ try {
   console.error(error)
 }
 
-//middleware to handle CORS
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-  })
-)
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Origin', '*')
-//   res.header(
-//     'Access-Control-Allow-Headers',
-//     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-//   )
-//   if (req.method === 'OPTIONS') {
-//     res.header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET')
-//     return res.status(200).json({})
-//   }
-//   next()
-// })
+app.use(morgan('dev'))
+app.use('/uploads', express.static('uploads'))
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  )
+  if (req.method === 'OPTIONS') {
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, DELETE, GET')
+    return res.status(200).json({})
+  }
+  next()
+})
+
+app.use('/products', productsRoutes)
+app.get('/', (req, res) => res.sendFile('./index.html', { root: __dirname }))
 
 /* Middleware to handle errors.
 If the requests reaches here, it means that it couldnt be handled by
