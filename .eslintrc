@@ -1,7 +1,8 @@
 {
   "env": {
-    "node": 1,
-    "browser": 1
+    "node": true,
+    "jest/globals": true,
+    "browser": true
   },
   "globals": {
     "exampleGlobalVariable": true
@@ -9,5 +10,5 @@
   "rules": {
     "eqeqeq": 1
   },
-  "plugins": ["prettier"]
+  "plugins": ["prettier", "jest"]
 }
