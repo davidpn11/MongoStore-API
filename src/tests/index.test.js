@@ -1,5 +1,12 @@
-const sum = (x,y) => x + y
+const request = require('supertest')
+const app = require('../app')
 
-test('adds', () => {
-    expect(sum(1,2)).toBe(3)
+test('should pass integration tests', done => {
+  request(app)
+    .get('/')
+    .expect(200)
+    .end(err => {
+      if (err) throw done(err)
+      done()
+    })
 })

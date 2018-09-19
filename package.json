@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node src/index.js",
     "nodemon": "nodemon ./src/index.js localhost 3000",
-    "test": "jest src/tests",
-    "coverage": "jest --collectCoverageFrom=src/tests/**.js --coverage src"
+    "test": "jest src/tests --detectOpenHandles",
+    "coverage": "jest --collectCoverageFrom=src/test/**.js --collectCoverageFrom=!src/index.js --coverage src"
   },
   "keywords": [
     "node",
@@ -30,6 +30,7 @@
     "eslint": "^5.4.0",
     "eslint-plugin-jest": "^21.22.0",
     "jest": "^23.6.0",
-    "nodemon": "^1.18.3"
+    "nodemon": "^1.18.3",
+    "supertest": "^3.3.0"
   }
 }
