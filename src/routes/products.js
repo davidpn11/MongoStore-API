@@ -5,18 +5,20 @@ const Product = require('../model/product')
 const multer = require('multer')
 const fs = require('fs')
 const cloudinary = require('cloudinary')
-// const storage = multer.diskStorage({
-//   // destination: (req, file, callback) => callback(null, './uploads/'),
-//   filename: (req, file, callback) =>
-//     callback(null, new Date().toISOString() + file.originalname),
-// })
-const storage = multer.memoryStorage()
+const storage = multer.diskStorage({
+  // destination: (req, file, callback) => callback(null, './uploads/'),
+  filename: (req, file, callback) =>
+    callback(
+      null,
+      new Date().toISOString().replace(/:/g, '-') + file.originalname
+    ),
+})
+// const storage = multer.memoryStorage()
 const fileFilter = (req, file, callback) => {
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-    callback(null, true)
-  } else {
-    callback(new Error('file is not an image'), false)
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+    return callback(new Error('Only image files are allowed!'), false)
   }
+  callback(null, true)
 }
 
 cloudinary.config({
@@ -29,7 +31,7 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 1024 * 1024 * 2,
+    fileSize: 1024 * 1024 * 5,
   },
 })
 
@@ -102,7 +104,7 @@ router.post('/', upload.single('productImage'), (req, res) => {
   if (req.file) {
     cloudinary.v2.uploader.upload(req.file.path, (err, cloudResult) => {
       if (err) {
-        return res.status(500).json(err)
+        return res.status(500).json({ type: 'image upload', err })
       }
       const product = new Product({
         _id: new mongoose.Types.ObjectId(),
