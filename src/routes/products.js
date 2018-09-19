@@ -132,7 +132,7 @@ router.post('/', upload.single('productImage'), (req, res) => {
     })
     product
       .save()
-      .then(result => res.status(201).json(cloudResult))
+      .then(result => res.status(201).json(result))
       .catch(err => res.status(500).json(err))
   }
 })
