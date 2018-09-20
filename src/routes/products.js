@@ -6,12 +6,7 @@ const multer = require('multer')
 const fs = require('fs')
 const cloudinary = require('cloudinary')
 const storage = multer.diskStorage({
-  // destination: (req, file, callback) => callback(null, './uploads/'),
-  filename: (req, file, callback) =>
-    callback(
-      null,
-      new Date().toISOString().replace(/:/g, '-') + file.originalname
-    ),
+  filename: (req, file, callback) => callback(null, file.originalname),
 })
 // const storage = multer.memoryStorage()
 const fileFilter = (req, file, callback) => {
@@ -73,54 +68,33 @@ router.post('/clear', (req, res) => {
     .exec()
     .then(() => res.status(200).json({ status: 'database cleared' }))
     .catch(err => res.status(500).json({ err }))
-  // Product.find()
-  //   .exec()
-  //   .then(docs => {
-  //     docs.map(doc => {
-  //       if (doc.productImage) {
-  //         console.log('image', doc.productImage)
-  //         fs.unlink(doc.productImage, err => {
-  //           if (err) {
-  //             console.log('dont exist')
-  //           } else {
-  //             console.log('deleted', doc.productImage)
-  //           }
-  //         })
-  //       } else {
-  //         console.log('no image')
-  //       }
-  //     })
-  //   })
-  //   .then(() => {
-  //     console.log('finished')
-  //     Product.deleteMany()
-  //       .exec()
-  //       .then(() => res.status(200).json({ status: 'database cleared' }))
-  //   })
-  //   .catch(err => res.status(500).json({ err }))
 })
 
 router.post('/', upload.single('productImage'), (req, res) => {
   if (req.file) {
-    cloudinary.v2.uploader.upload(req.file.path, (err, cloudResult) => {
-      if (err) {
-        return res.status(500).json({ type: 'image upload', err })
+    cloudinary.v2.uploader.upload(
+      req.file.path,
+      { upload_preset: 'store-items' },
+      (err, cloudResult) => {
+        if (err) {
+          return res.status(500).json({ type: 'image upload', err })
+        }
+        const product = new Product({
+          _id: new mongoose.Types.ObjectId(),
+          title: req.body.title,
+          slogan: req.body.slogan,
+          stars: req.body.stars,
+          category: req.body.category,
+          price: req.body.price,
+          description: req.body.description,
+          productImage: cloudResult.secure_url || '',
+        })
+        product
+          .save()
+          .then(result => res.status(201).json(cloudResult))
+          .catch(err => res.status(500).json(err))
       }
-      const product = new Product({
-        _id: new mongoose.Types.ObjectId(),
-        title: req.body.title,
-        slogan: req.body.slogan,
-        stars: req.body.stars,
-        category: req.body.category,
-        price: req.body.price,
-        description: req.body.description,
-        productImage: cloudResult.secure_url || '',
-      })
-      product
-        .save()
-        .then(result => res.status(201).json(cloudResult))
-        .catch(err => res.status(500).json(err))
-    })
+    )
   } else {
     const product = new Product({
       _id: new mongoose.Types.ObjectId(),
