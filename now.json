@@ -1,8 +1,0 @@
-{
-  "public": true,
-  "type": "docker",
-  "alias": "https://mongostore-api.now.sh/",
-  "features": {
-    "cloud": "v2"
-  }
-}
